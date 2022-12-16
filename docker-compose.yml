@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  web:
+    container_name: "web"
+    build:
+      dockerfile: "./container/web/Dockerfile"
+    ports:
+      - "80:80"
+    volumes:
+      - "./src/php:/var/www/html"
+  vue:
+    container_name: "vue"
+    build:
+      dockerfile: "./container/vue/Dockerfile"
+    ports:
+      - "5173:5173"
+    volumes:
+      - "./src/vue:/app"
+    tty: true
+  php:
+    container_name: "php"
+    build:
+      dockerfile: "./container/php/Dockerfile"
+    ports:
+      - "9000:9000"
+    volumes:
+      - "./src/php:/var/www/html"
+  db:
+    container_name: "db"
+    restart: always
+    image: postgres:14-alpine
+    shm_size: 256mb
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}"
+      - "POSTGRES_USER=${POSTGRES_USER}"
+      - "POSTGRES_DB=${POSTGRES_DB}"
+      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
