@@ -3,7 +3,7 @@
 docker compose up -d
 docker compose exec vue bash
 cd Onigiri
-nom run dev
+npm run dev
 ```
 
 ## コンテナ再起動
